@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use App\Http\Requests\StoreNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
+use Inertia\Inertia;
 
 class NoteController extends Controller
 {
@@ -13,7 +14,14 @@ class NoteController extends Controller
      */
     public function index()
     {
-        //
+        $data = Note::query()
+            ->with('user')
+            ->latest()
+            ->get();
+
+        return Inertia::render('note/Index', [
+            'data' => $data,
+        ]);
     }
 
     /**
@@ -21,7 +29,7 @@ class NoteController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('note/Create');
     }
 
     /**
@@ -29,7 +37,13 @@ class NoteController extends Controller
      */
     public function store(StoreNoteRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        $data['user_id'] = auth()->user()->id;
+
+        Note::create($data);
+
+        return to_route('note.index');
     }
 
     /**
@@ -45,7 +59,9 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
-        //
+        return Inertia::render('note/Edit', [
+            'data' => $note,
+        ]);
     }
 
     /**
@@ -53,7 +69,11 @@ class NoteController extends Controller
      */
     public function update(UpdateNoteRequest $request, Note $note)
     {
-        //
+        $data = $request->validated();
+
+        $note->update($data);
+
+        return to_route('note.index');
     }
 
     /**
@@ -61,6 +81,8 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        //
+        $note->delete();
+
+        return to_route('note.index');
     }
 }
