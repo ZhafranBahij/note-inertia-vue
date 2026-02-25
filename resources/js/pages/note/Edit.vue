@@ -57,7 +57,7 @@ function submit() {
             <h2>Edit Note</h2>
 
             <div class="flex justify-start">
-                <Link href="/note">
+                <Link prefetch href="/note">
                     <- Back
                 </Link>
             </div>

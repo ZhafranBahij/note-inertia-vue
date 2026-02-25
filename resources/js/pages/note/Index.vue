@@ -70,7 +70,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </Form>
                 </div>
                 <div>
-                    <Link :href="`note/create`">
+                    <Link prefetch :href="`note/create`">
                     Create Note +
                     </Link>
                 </div>
@@ -95,7 +95,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <TableRow v-for="item in props.data.data" :key="item.id">
                         <TableCell>
 
-                        <Link :href="`/note/${item.id}/edit`" >
+                        <Link prefetch :href="`/note/${item.id}/edit`" >
                             <Button class="bg-yellow-400 mr-2">
                                 <Pen />
                             </Button>

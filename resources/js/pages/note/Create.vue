@@ -74,7 +74,7 @@ const form = useForm({
             <h2>Create a new note</h2>
 
             <div class="flex justify-start">
-                <Link href="/note">
+                <Link prefetch href="/note">
                     <- Back
                 </Link>
             </div>
