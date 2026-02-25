@@ -13,7 +13,7 @@ class NotePolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->can('view note');
     }
 
     /**
@@ -21,7 +21,11 @@ class NotePolicy
      */
     public function view(User $user, Note $note): bool
     {
-        return true;
+        if ($user->hasRole('user')) {
+            return $user->can('view note') && $note->user_id == $user->id;
+        }
+
+        return $user->can('view note');
     }
 
     /**
@@ -29,7 +33,7 @@ class NotePolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->can('create note');
     }
 
     /**
@@ -37,7 +41,11 @@ class NotePolicy
      */
     public function update(User $user, Note $note): bool
     {
-        return true;
+        if ($user->hasRole('user')) {
+            return $user->can('edit note') && $note->user_id == $user->id;
+        }
+
+        return $user->can('edit note');
     }
 
     /**
@@ -45,8 +53,13 @@ class NotePolicy
      */
     public function delete(User $user, Note $note): bool
     {
-        return true;
+        if ($user->hasRole('user')) {
+            return $user->can('delete note') && $note->user_id == $user->id;
+        }
+
+        return $user->can('delete note');
     }
+
 
     /**
      * Determine whether the user can restore the model.

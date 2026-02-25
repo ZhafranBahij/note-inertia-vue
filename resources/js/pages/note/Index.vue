@@ -24,7 +24,10 @@ import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
 import Input from '@/components/ui/input/Input.vue';
 
 const page = usePage()
-const props = defineProps({ data: Object })
+const props = defineProps({ 
+    data: Object,
+    can: Array,
+})
 
 const form = useForm({
     search: null,
@@ -69,7 +72,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         </Button>
                     </Form>
                 </div>
-                <div>
+                <div v-if="can.create_note">
                     <Link prefetch :href="`note/create`">
                     Create Note +
                     </Link>
@@ -101,7 +104,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                             </Button>
                         </Link>
 
-                        <Link :href="`/note/${item.id}`" method="delete" as="button" >
+                        <Link :href="`/note/${item.id}`" method="delete" as="button" v-if="can.delete_note" >
                             <Button class="bg-red-400">
                                 <Trash />
                             </Button>

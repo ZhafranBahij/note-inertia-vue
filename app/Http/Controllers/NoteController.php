@@ -6,6 +6,7 @@ use App\Models\Note;
 use App\Http\Requests\StoreNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 // use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,16 +17,26 @@ class NoteController extends Controller
      */
     public function index(Request $request)
     {
+        Gate::authorize('viewAny', Note::class);
+
         $data = Note::query()
             ->with([
                 'user',
             ])
             ->where('title', 'LIKE', '%' . $request->search . '%')
+            ->when(auth()->user()->hasRole('user'), function ($query) {
+                return $query->where('user_id', auth()->user()->id);
+            })
             ->latest()
             ->paginate(10);
 
         return Inertia::render('note/Index', [
             'data' => $data,
+            'can' => [
+                'create_note' => auth()->user()->can('create note'),
+                'edit_note' => auth()->user()->can('edit note'),
+                'delete_note' => auth()->user()->can('delete note'),
+            ]
         ]);
     }
 
@@ -34,6 +45,7 @@ class NoteController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', Note::class);
         return Inertia::render('note/Create');
     }
 
@@ -42,6 +54,7 @@ class NoteController extends Controller
      */
     public function store(StoreNoteRequest $request)
     {
+        Gate::authorize('create', Note::class);
         $data = $request->validated();
 
         $data['user_id'] = auth()->user()->id;
@@ -58,7 +71,7 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
-        //
+        Gate::authorize('view', Note::class);
     }
 
     /**
@@ -66,6 +79,8 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
+        Gate::authorize('update', $note);
+
         return Inertia::render('note/Edit', [
             'data' => $note,
         ]);
@@ -76,6 +91,8 @@ class NoteController extends Controller
      */
     public function update(UpdateNoteRequest $request, Note $note)
     {
+        Gate::authorize('update', $note);
+
         $data = $request->validated();
 
         $note->update($data);
@@ -90,6 +107,8 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
+        Gate::authorize('delete', $note);
+
         $note->delete();
 
         return Inertia::flash('message', 'Data deleted successfully!')->back();
