@@ -14,23 +14,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import CardHeader from '@/components/ui/card/CardHeader.vue';
-import CardTitle from '@/components/ui/card/CardTitle.vue';
-import CardDescription from '@/components/ui/card/CardDescription.vue';
-import CardContent from '@/components/ui/card/CardContent.vue';
-import CardFooter from '@/components/ui/card/CardFooter.vue';
 import Card from '@/components/ui/card/Card.vue';
-import Label from '@/components/ui/label/Label.vue';
-import Input from '@/components/ui/input/Input.vue';
-import Textarea from '@/components/ui/textarea/Textarea.vue';
 import Button from '@/components/ui/button/Button.vue';
-import PopoverTrigger from '@/components/ui/popover/PopoverTrigger.vue';
-import Popover from '@/components/ui/popover/Popover.vue';
-import PopoverContent from '@/components/ui/popover/PopoverContent.vue';
 import { Pen, Trash } from 'lucide-vue-next';
+import Pagination from '@/components/Pagination.vue';
 
-
-defineProps({ data: Object })
+const props = defineProps({ data: Object })
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -70,7 +59,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow v-for="item in data" :key="item.id">
+                    <TableRow v-for="item in props.data.data" :key="item.id">
                         <TableCell>
 
                         <Link :href="`/note/${item.id}/edit`" >
@@ -95,6 +84,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </TableRow>
                 </TableBody>
             </Table>
+
+            <Pagination :data="props.data" />
         </Card>
         </div>
     </AppLayout>

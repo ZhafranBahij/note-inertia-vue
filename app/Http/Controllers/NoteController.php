@@ -17,7 +17,8 @@ class NoteController extends Controller
         $data = Note::query()
             ->with('user')
             ->latest()
-            ->get();
+            ->paginate(5);
+        // dd($data->toArray());
 
         return Inertia::render('note/Index', [
             'data' => $data,

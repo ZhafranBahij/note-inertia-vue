@@ -31,9 +31,6 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
-console.log(note.index());
-
-
 const footerNavItems: NavItem[] = [
     {
         title: 'Github Repo',
