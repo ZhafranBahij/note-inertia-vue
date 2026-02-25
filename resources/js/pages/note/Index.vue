@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, Link, usePage } from '@inertiajs/vue3';
+import { Form, Head, Link, router, useForm, usePage, usePoll } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
@@ -16,14 +16,19 @@ import {
 } from '@/components/ui/table';
 import Card from '@/components/ui/card/Card.vue';
 import Button from '@/components/ui/button/Button.vue';
-import { CheckCircle2Icon, Pen, Trash } from 'lucide-vue-next';
+import { CheckCircle2Icon, Pen, Search, Trash } from 'lucide-vue-next';
 import Pagination from '@/components/Pagination.vue';
 import Alert from '@/components/ui/alert/Alert.vue';
 import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
 import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
+import Input from '@/components/ui/input/Input.vue';
 
 const page = usePage()
 const props = defineProps({ data: Object })
+
+const form = useForm({
+    search: null,
+})
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -45,16 +50,30 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <Alert class="bg-green-400 text-white">
                     <CheckCircle2Icon />
                     <AlertTitle>{{ page.flash.message }}</AlertTitle>
-                    <!-- <AlertDescription>
-                        This is an alert with icon, title and description.
-                    </AlertDescription> -->
                 </Alert>
-                    <!-- {{ page.flash.message }} -->
             </div>
-            <div class="flex items-center justify-end">
-                <Link :href="`note/create`">
-                Create Note +
-                </Link>
+            <div class="flex items-center justify-end gap-4">
+                <div>
+                    <Form @submit.prevent="form.get('/note')" method="get" class="flex flex-row gap-2">
+                        <Input
+                            id="search"
+                            type="text"
+                            v-model="form.search"
+                            autofocus
+                            :tabindex="1"
+                            autocomplete="search"
+                            placeholder="Enter search"
+                        />
+                        <Button type="submit">
+                            <Search />
+                        </Button>
+                    </Form>
+                </div>
+                <div>
+                    <Link :href="`note/create`">
+                    Create Note +
+                    </Link>
+                </div>
             </div>
             <Table>
                 <TableCaption>A list of your recent notes.</TableCaption>

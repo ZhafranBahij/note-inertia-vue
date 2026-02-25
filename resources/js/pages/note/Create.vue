@@ -28,6 +28,10 @@ import PopoverTrigger from '@/components/ui/popover/PopoverTrigger.vue';
 import Popover from '@/components/ui/popover/Popover.vue';
 import PopoverContent from '@/components/ui/popover/PopoverContent.vue';
 import { title } from 'process';
+import Alert from '@/components/ui/alert/Alert.vue';
+import { AlertCircleIcon } from 'lucide-vue-next';
+import AlertTitle from '@/components/ui/alert/AlertTitle.vue';
+import AlertDescription from '@/components/ui/alert/AlertDescription.vue';
 
 
 defineProps({ data: Object })
@@ -54,6 +58,19 @@ const form = useForm({
         >
 
         <Card class="px-12 py-4 col-span-12">
+            <Alert v-if="Object.keys(form.errors).length > 0" variant="destructive">
+                <AlertCircleIcon />
+                <AlertTitle>Errors</AlertTitle>
+                
+                <AlertDescription>
+                    <ul class="mt-2 list-inside list-disc space-y-1">
+                        <li v-for="(error, field) in form.errors" :key="field">
+                            {{ field }}: {{ error }}
+                        </li>
+                    </ul>
+                </AlertDescription>
+            </Alert>
+
             <h2>Create a new note</h2>
 
             <div class="flex justify-start">
@@ -62,10 +79,10 @@ const form = useForm({
                 </Link>
             </div>
 
-            <Form @submit.prevent="form.post('/note')" method="put">
+            <Form @submit.prevent="form.post('/note')" method="post">
                 <div class="grid gap-y-4">
                     <div class="grid gap-2">
-                        <Label for="title">Title</Label>
+                        <Label for="title">Title <span class="text-red-500">*</span> </Label>
                         <Input
                             id="title"
                             type="text"

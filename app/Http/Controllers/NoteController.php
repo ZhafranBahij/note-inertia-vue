@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use App\Http\Requests\StoreNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
+use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class NoteController extends Controller
@@ -12,10 +14,13 @@ class NoteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $data = Note::query()
-            ->with('user')
+            ->with([
+                'user',
+            ])
+            ->where('title', 'LIKE', '%' . $request->search . '%')
             ->latest()
             ->paginate(10);
 
