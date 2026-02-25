@@ -17,8 +17,7 @@ class NoteController extends Controller
         $data = Note::query()
             ->with('user')
             ->latest()
-            ->paginate(5);
-        // dd($data->toArray());
+            ->paginate(10);
 
         return Inertia::render('note/Index', [
             'data' => $data,
@@ -43,6 +42,8 @@ class NoteController extends Controller
         $data['user_id'] = auth()->user()->id;
 
         Note::create($data);
+
+        Inertia::flash('message', 'Data created successfully!');
 
         return to_route('note.index');
     }
@@ -74,6 +75,8 @@ class NoteController extends Controller
 
         $note->update($data);
 
+        Inertia::flash('message', 'Data updated successfully!');
+
         return to_route('note.index');
     }
 
@@ -84,6 +87,6 @@ class NoteController extends Controller
     {
         $note->delete();
 
-        return to_route('note.index');
+        return Inertia::flash('message', 'Data deleted successfully!')->back();
     }
 }
